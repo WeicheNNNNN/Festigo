@@ -52056,7 +52056,7 @@ s.V(new A.aO1(s,a))},
 $S:155}
 A.aO1.prototype={
 $0(){var s=this.a
-s.d=B.c.aF(s.d+(this.b.d-1)*0.05,0.6,1)},
+s.d=B.c.aF(s.d+(this.b.d-1)*0.01,0.4,1)},
 $S:0}
 A.aO3.prototype={
 $1(a){var s=null,r=J.a6(a),q=r.h(a,"color"),p=A.bM(A.dY(J.aWo(q==null?"#3F51B5":q,"#","0xff"),s))
