@@ -11,9 +11,9 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: 'https://vrxvpmvulxhdqwubvgrn.supabase.co',
+    url: 'https://kxgpxtnhdtkgcqvebtlf.supabase.co',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyeHZwbXZ1bHhoZHF3dWJ2Z3JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwNTg4MDUsImV4cCI6MjA2MDYzNDgwNX0.DmMHj4saGZR6k8zpQgqyvhG8oz3dExNGUmmdqjMZhqc',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4Z3B4dG5oZHRrZ2NxdmVidGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5MjI0NzYsImV4cCI6MjA3NTQ5ODQ3Nn0.5yde3mqDyNiJUCe_XrEYYEZJbxDqaEssiT9ciw6BL34',
   );
   runApp(const MusicFestApp());
 }

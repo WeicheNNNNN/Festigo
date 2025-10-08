@@ -9,6 +9,18 @@ import 'package:crop_your_image/crop_your_image.dart';
 import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 
+// 常數
+const kBucketImages = 'festival_images';
+const kBucketMaps = 'festival_maps';
+
+// 工具函式
+String pathFromPublicUrl(String publicUrl, String bucket) {
+  final marker = '/object/public/$bucket/';
+  final idx = publicUrl.indexOf(marker);
+  if (idx == -1) return '';
+  return publicUrl.substring(idx + marker.length);
+}
+
 class OrganizerHomeScreen extends StatefulWidget {
   const OrganizerHomeScreen({super.key});
 
@@ -50,27 +62,21 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
   }
 
   List<Map<String, dynamic>> festivals = [];
-  Future<String> uploadCompressedImageToSupabase(XFile pickedImage) async {
-    final bytes = await pickedImage.readAsBytes(); // 讀取原始圖片
 
-    // 壓縮圖片
+  Future<String> uploadCompressedImageToSupabase(XFile pickedImage) async {
+    final bytes = await pickedImage.readAsBytes();
     final originalImage = img.decodeImage(bytes);
     if (originalImage == null) throw Exception('無法解碼圖片');
 
-    // 重新編碼成 JPG 並降低品質（80%）
     final compressedBytes = Uint8List.fromList(
-      img.encodeJpg(
-        originalImage,
-        quality: 80, // ⭐ 調整這裡的壓縮比例，70～90之間都很常見
-      ),
+      img.encodeJpg(originalImage, quality: 80),
     );
 
-    // 上傳到 Supabase
     final uuid = const Uuid().v4();
-    final safeFileName = 'festival_images/$uuid.jpg'; // 統一轉成 jpg
+    final safeFileName = '$uuid.jpg';
 
     await Supabase.instance.client.storage
-        .from('festapp')
+        .from(kBucketImages)
         .uploadBinary(
           safeFileName,
           compressedBytes,
@@ -81,7 +87,7 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
         );
 
     final publicUrl = Supabase.instance.client.storage
-        .from('festapp')
+        .from(kBucketImages)
         .getPublicUrl(safeFileName);
 
     return publicUrl;
@@ -430,11 +436,10 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                     );
 
                                     final uuid = const Uuid().v4();
-                                    final safeFileName =
-                                        'festival_images/$uuid.jpg';
+                                    final safeFileName = '$uuid.jpg';
 
                                     await Supabase.instance.client.storage
-                                        .from('festapp')
+                                        .from(kBucketImages) // ❗改 bucket
                                         .uploadBinary(
                                           safeFileName,
                                           compressedBytes,
@@ -445,7 +450,7 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                         );
 
                                     imageUrl = Supabase.instance.client.storage
-                                        .from('festapp')
+                                        .from(kBucketImages) // ❗改 bucket
                                         .getPublicUrl(safeFileName);
                                   }
 
@@ -467,11 +472,10 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                         );
 
                                     final uuid = const Uuid().v4();
-                                    final safeFileName =
-                                        'festival_maps/$uuid.jpg';
+                                    final safeFileName = '$uuid.jpg';
 
                                     await Supabase.instance.client.storage
-                                        .from('festapp')
+                                        .from(kBucketMaps) // ❗改 bucket
                                         .uploadBinary(
                                           safeFileName,
                                           compressedMapBytes,
@@ -482,7 +486,7 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                         );
 
                                     mapUrl = Supabase.instance.client.storage
-                                        .from('festapp')
+                                        .from(kBucketMaps) // ❗改 bucket
                                         .getPublicUrl(safeFileName);
                                   }
 
@@ -925,13 +929,13 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                                       final uuid =
                                                           const Uuid().v4();
                                                       final safeFileName =
-                                                          'festival_maps/$uuid.jpg';
+                                                          '$uuid.jpg';
 
                                                       await Supabase
                                                           .instance
                                                           .client
                                                           .storage
-                                                          .from('festapp')
+                                                          .from('kBucketImages')
                                                           .uploadBinary(
                                                             safeFileName,
                                                             pickedMapDataForEdit!,
@@ -947,7 +951,7 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                                           .instance
                                                           .client
                                                           .storage
-                                                          .from('festapp')
+                                                          .from('kBucketMaps')
                                                           .getPublicUrl(
                                                             safeFileName,
                                                           );
@@ -1153,20 +1157,28 @@ class _OrganizerHomeScreenState extends State<OrganizerHomeScreen> {
                                     final imageUrl = festivalToDelete['image'];
                                     if (imageUrl != null &&
                                         imageUrl.isNotEmpty) {
-                                      final path =
-                                          Uri.parse(imageUrl).pathSegments.last;
-                                      await Supabase.instance.client.storage
-                                          .from('festapp')
-                                          .remove([path]);
+                                      final pathInBucket = pathFromPublicUrl(
+                                        imageUrl,
+                                        kBucketImages,
+                                      );
+                                      if (pathInBucket.isNotEmpty) {
+                                        await Supabase.instance.client.storage
+                                            .from(kBucketImages) // ❗改 bucket
+                                            .remove([pathInBucket]);
+                                      }
                                     }
 
                                     final mapUrl = festivalToDelete['map'];
                                     if (mapUrl != null && mapUrl.isNotEmpty) {
-                                      final path =
-                                          Uri.parse(mapUrl).pathSegments.last;
-                                      await Supabase.instance.client.storage
-                                          .from('festapp')
-                                          .remove([path]);
+                                      final pathInBucket = pathFromPublicUrl(
+                                        mapUrl,
+                                        kBucketMaps,
+                                      );
+                                      if (pathInBucket.isNotEmpty) {
+                                        await Supabase.instance.client.storage
+                                            .from(kBucketMaps) // ❗改 bucket
+                                            .remove([pathInBucket]);
+                                      }
                                     }
                                   } catch (e) {
                                     print('刪除Storage圖片失敗：$e');
