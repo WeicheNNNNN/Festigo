@@ -52031,7 +52031,7 @@ l=d.d
 k=A.Q6(B.jB,1)
 j=A.dk(6)
 i=t.p
-c=A.lD(new A.aV(new A.ay(0,45,0,0),A.eB(B.aG,A.b([o,A.fp(e,A.c9(e,A.aO(B.e.bo(B.b.j(A.za(d.f)),2,"0")+":"+B.e.bo(B.b.j(A.GJ(d.f)),2,"0"),e,e,e,e,B.a7L,e,e,e),B.p,e,e,new A.c_(B.j,e,k,j,e,e,B.S),e,e,e,B.iM,e,e,e),e,e,e,2,m+6*l,e),A.co(e,120*d.d,50)],i),B.x,B.az,e),e),c,B.q,e,B.zD,e,B.af)
+c=A.lD(new A.aV(new A.ay(0,45,0,0),A.eB(B.aG,A.b([o,A.fp(e,A.c9(e,A.aO(B.e.bo(B.b.j(A.za(d.f)),2,"0")+":"+B.e.bo(B.b.j(A.GJ(d.f)),2,"0"),e,e,e,e,B.a7L,e,e,e),B.p,e,e,new A.c_(B.j,e,k,j,e,e,B.S),e,e,e,B.iM,e,e,e),e,e,e,2,m+15*l-9,e),A.co(e,120*d.d,50)],i),B.x,B.az,e),e),c,B.q,e,B.zD,e,B.af)
 l=d.x
 l===$&&A.a()
 m=f.c
@@ -52052,11 +52052,11 @@ return A.d7(e,A.bz(A.b([c,A.cU(A.lD(A.bU(A.b([o,A.cU(A.lD(A.eB(B.aG,A.b([h,g,A.b
 $S:154}
 A.aO6.prototype={
 $1(a){var s=this.a
-s.V(new A.aO1(s,B.c.aF(s.d*a.d,0.6,1)))},
+s.V(new A.aO1(s,a))},
 $S:155}
 A.aO1.prototype={
-$0(){var s=this.a,r=s.d
-s.d=r+(this.b-r)*0.2},
+$0(){var s=this.a
+s.d=B.c.aF(s.d+(this.b.d-1)*0.05,0.6,1)},
 $S:0}
 A.aO3.prototype={
 $1(a){var s=null,r=J.a6(a),q=r.h(a,"color"),p=A.bM(A.dY(J.aWo(q==null?"#3F51B5":q,"#","0xff"),s))
